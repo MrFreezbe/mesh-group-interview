@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="create-user-table" author="KrasnoslabodtsevRA">
+        <createTable tableName="user">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="NAME" type="varchar(500)" />
+            <column name="DATE_OF_BIRTH" type="date" />
+            <column name="PASSWORD" type="varchar(500)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-account-table" author="KrasnoslabodtsevRA">
+        <createTable tableName="ACCOUNT">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="USER_ID" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="BALANCE" type="decimal(10,2)" />
+            <column name="INITIAL_BALANCE" type="decimal(10,2)" />
+        </createTable>
+        <addForeignKeyConstraint baseTableName="ACCOUNT" baseColumnNames="USER_ID" referencedTableName="user"
+            referencedColumnNames="ID" constraintName="account_user_link" />
+    </changeSet>
+
+    <changeSet id="create-email-data-table" author="KrasnoslabodtsevRA">
+        <createTable tableName="EMAIL_DATA">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="USER_ID" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="EMAIL" type="varchar(200)" />
+        </createTable>
+        <addForeignKeyConstraint baseTableName="EMAIL_DATA" baseColumnNames="USER_ID" referencedTableName="user"
+            referencedColumnNames="ID" constraintName="email_data_user_link" />
+    </changeSet>
+
+    <changeSet id="create-phone-data-table" author="KrasnoslabodtsevRA">
+        <createTable tableName="PHONE_DATA">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="USER_ID" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="PHONE" type="varchar(13)" />
+        </createTable>
+        <addForeignKeyConstraint baseTableName="PHONE_DATA" baseColumnNames="USER_ID" referencedTableName="user"
+            referencedColumnNames="ID" constraintName="phone_data_user_link" />
+    </changeSet>
+
+    <changeSet id="create-user-account-unique-constraint" author="KrasnoslabodtsevRA">
+        <addUniqueConstraint tableName="ACCOUNT" columnNames="USER_ID" constraintName="user_account_unique" />
+    </changeSet>
+
+</databaseChangeLog>
