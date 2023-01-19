@@ -2,12 +2,14 @@ package ru.meshgroup.interview.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class PhoneDataDto extends BaseDto{
+@NoArgsConstructor
+@AllArgsConstructor
+public class PhoneDataDto implements BaseDto {
     @NotNull
     @Size(min = 11, max = 13)
     private String phone;

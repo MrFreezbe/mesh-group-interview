@@ -1,6 +1,7 @@
 package ru.meshgroup.interview.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,9 @@ import ru.meshgroup.interview.service.UserService;
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class JwtSecurityConfig {
+
+    @Value("${web-security.whitelist}")
+    private String[] whitelist;
 
     private final UserService userService;
 
@@ -31,8 +35,7 @@ public class JwtSecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
-                        "/webjars/**", "/v1/authenticate").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(whitelist).permitAll())
                 .authorizeHttpRequests().anyRequest().fullyAuthenticated()
                 .and()
                 .build();

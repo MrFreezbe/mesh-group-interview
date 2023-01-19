@@ -17,3 +17,5 @@ server:
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
+web-security:
+  whitelist: /swagger-ui/**, /v3/api-docs/**, /webjars/**, /v1/authenticate

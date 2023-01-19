@@ -15,7 +15,9 @@ import java.util.Arrays;
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
+
     private final AccountRepository repository;
+
     private final UserService userService;
 
     @Scheduled(fixedRate = 30000)

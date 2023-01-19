@@ -1,14 +1,16 @@
 package ru.meshgroup.interview.model;
 
 import jakarta.validation.constraints.DecimalMin;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class AccountDto extends BaseDto{
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountDto implements BaseDto{
     @DecimalMin("0.00")
     private BigDecimal balance;
 

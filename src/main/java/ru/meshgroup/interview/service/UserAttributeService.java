@@ -1,9 +1,9 @@
 package ru.meshgroup.interview.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.meshgroup.interview.domain.BaseEntity;
-import ru.meshgroup.interview.domain.User;
 import ru.meshgroup.interview.exception.BadRequestException;
 import ru.meshgroup.interview.exception.EntitiesNotFoundException;
 import ru.meshgroup.interview.mapper.BaseMapper;
@@ -11,6 +11,7 @@ import ru.meshgroup.interview.model.BaseDto;
 import ru.meshgroup.interview.repository.BaseRepository;
 
 @Component
+@Transactional
 public abstract class UserAttributeService<Entity extends BaseEntity, Dto extends BaseDto,
         Repository extends BaseRepository<Entity>, Mapper extends BaseMapper<Entity, Dto>> {
 
@@ -20,7 +21,7 @@ public abstract class UserAttributeService<Entity extends BaseEntity, Dto extend
 
     private UserService userService;
 
-    private Entity getEntity(Long userId, Long attributeId) {
+    public Entity getEntity(Long userId, Long attributeId) {
         Entity entity = repository.findById(attributeId)
                 .orElseThrow(() -> new EntitiesNotFoundException(attributeId));
         if (!entity.getUser().getId().equals(userId)) {
@@ -38,12 +39,11 @@ public abstract class UserAttributeService<Entity extends BaseEntity, Dto extend
         return mapper.toDto(updatedEntity);
     }
 
-    public Dto addAttribute(Long userId, Dto dto) {
+    public Dto addAttributeToUser(Long userId, Dto dto) {
         checkIfAttributeExists(dto.getAttributeValue());
-        User user = userService.getUserById(userId);
 
         Entity entity = mapper.toEntity(dto);
-        entity.setUser(user);
+        entity.setUser(userService.getUserById(userId));
 
         return mapper.toDto(repository.save(entity));
     }
