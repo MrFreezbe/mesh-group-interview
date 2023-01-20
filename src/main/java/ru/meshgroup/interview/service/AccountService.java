@@ -1,7 +1,10 @@
 package ru.meshgroup.interview.service;
 
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.meshgroup.interview.domain.Account;
@@ -34,11 +37,16 @@ public class AccountService {
 
     /**
      * Simplest solution of money transfer (suppose that we have a few users)
+     *
      * @param fromUserId id of user who sends money
-     * @param toUserId id of user who receives money
-     * @param value amount of money
+     * @param toUserId   id of user who receives money
+     * @param value      amount of money
      */
-    public synchronized void transferMoney(Long fromUserId, Long toUserId, BigDecimal value) {
+    @Retryable(
+            retryFor = {OptimisticLockException.class},
+            backoff = @Backoff(delay = 1000)
+    )
+    public void transferMoney(Long fromUserId, Long toUserId, BigDecimal value) {
         Account fromAccount = userService.getUserById(fromUserId).getAccount();
         Account toAccount = userService.getUserById(toUserId).getAccount();
 

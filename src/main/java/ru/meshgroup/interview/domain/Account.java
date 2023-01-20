@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,10 @@ public class Account {
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;

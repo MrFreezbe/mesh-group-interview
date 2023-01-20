@@ -34,7 +34,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 
     @Id

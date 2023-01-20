@@ -24,6 +24,7 @@
             </column>
             <column name="BALANCE" type="decimal(10,2)" />
             <column name="INITIAL_BALANCE" type="decimal(10,2)" />
+            <column name="VERSION" type="bigint"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="ACCOUNT" baseColumnNames="USER_ID" referencedTableName="user"
             referencedColumnNames="ID" constraintName="account_user_link" />
