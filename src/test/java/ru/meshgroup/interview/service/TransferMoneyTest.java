@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.meshgroup.interview.AbstractTest;
 import ru.meshgroup.interview.domain.Account;
@@ -51,5 +52,22 @@ class TransferMoneyTest extends AbstractTest {
         // check that money was transferred
         Assertions.assertEquals(BigDecimal.ZERO, accountOne.getBalance());
         Assertions.assertEquals(BigDecimal.valueOf(2), accountTwo.getBalance());
+    }
+
+    @Test
+    void testOptimisticLocking() {
+        User user = userRepository.save(new User());
+
+        Account account = new Account();
+        account.setUser(user);
+        account.setBalance(BigDecimal.valueOf(100));
+        accountRepository.save(account);
+
+        Account account1 = accountRepository.findById(account.getId()).get();
+        Account account2 = accountRepository.findById(account.getId()).get();
+        account1.setBalance(BigDecimal.valueOf(200));
+        accountRepository.save(account1);
+        // this should throw an OptimisticLockException as the version of account2 is out of date
+        Assertions.assertThrows(ObjectOptimisticLockingFailureException.class, () -> accountRepository.save(account2));
     }
 }
